@@ -89,4 +89,8 @@ contract SBT {
         require(souls[msg.sender].owner == msg.sender, "SBT don't exists");
         return souls[msg.sender];
     }
+
+    receive() external payable {}
+
+    fallback() external payable {}
 }
