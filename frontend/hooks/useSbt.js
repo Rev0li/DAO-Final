@@ -1,13 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 
-import {
-  getWalletClient,
-  getContract,
-  prepareWriteContract,
-  writeContract,
-  readContract,
-  watchContractEvent,
-} from "@wagmi/core";
+import { getContract, writeContract, readContract } from "@wagmi/core";
 
 import { config, client } from "@/config/index";
 import { useWagmi } from "./useWagmi";

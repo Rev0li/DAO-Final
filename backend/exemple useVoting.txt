@@ -1,0 +1,80 @@
+import { useState, useEffect, useContext } from "react";
+import { useWagmi } from "./useWagmi";
+
+import {
+  getContract,
+  writeContract,
+  readContract,
+} from "@wagmi/core";
+
+import { config, client } from "@/config/index";
+import { useWagmi } from "./useWagmi";
+import { useNotif } from "@/hooks/useNotif";
+
+
+import { config, client } from "@/config/index";
+
+const contractAddress = config.contracts.Voting.address;
+const contractABI = config.contracts.Voting.abi;
+
+export function useVoting() {
+  const { isConnected, address, chain } = useWagmi();
+
+  const { throwNotif } = useNotif();
+  // ::::::::::: STATE :::::::::::
+  const [contract, setContract] = useState({});
+
+  const loadContract = async () => {
+    const Voting = getContract({
+      address: contractAddress,
+      abi: contractABI,
+      account: address,
+    });
+    // Set state hook
+    setContract(Voting);
+  };
+
+
+  // ajouter dans la whilist
+  const addVoter = async () => {
+
+  };
+  
+  // Ajouter une proposals dans le tableau (pour l'affichage plus tard)
+  const addProposal = async () => {
+    
+  };
+  
+    // ajouter son vote (yes no neutral) (pour le rendu decision frontend)
+    const addVote = async () => {
+  
+    };
+
+  // Recupere les proposals dans un tableau (pour l'affichage plus tard)
+  const getArrayProposal = async () => {
+
+  };
+
+
+  // Recupere la decision de la proposal concerner (pour l'affichage plus tard)
+  const getDecisionOfVote = async () => {
+
+  };
+
+  return {
+    // Static data
+    contractAddress,
+    address,
+
+    // State contract
+    contract,
+
+    // Functions
+
+
+    // Events
+
+
+  };
+}
+

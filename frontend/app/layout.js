@@ -8,6 +8,7 @@ import Footer from "@/components/Footer/Footer";
 import { SbtProvider } from "@/providers/SbtProvider";
 import RainbowkitProvider from "@/providers/RainbowkitProvider";
 import { WagmiProvider } from "@/providers/WagmiProvider";
+import { VotingProvider } from "@/providers/VotingProvider";
 
 export default function RootLayout({ children }) {
   return (
@@ -16,11 +17,13 @@ export default function RootLayout({ children }) {
         <RainbowkitProvider>
           <WagmiProvider>
             <ChakraProvider>
-              <SbtProvider>
-                <Header />
-                {children}
-                <Footer />
-              </SbtProvider>
+              <VotingProvider>
+                <SbtProvider>
+                  <Header />
+                  {children}
+                  <Footer />
+                </SbtProvider>
+              </VotingProvider>
             </ChakraProvider>
           </WagmiProvider>
         </RainbowkitProvider>

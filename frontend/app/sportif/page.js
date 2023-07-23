@@ -59,34 +59,36 @@ export default function sportif() {
   //     fetchSoulData();
   //   }
   // }, [getSoul, isConnected, isLoading]);
-  useEffect(() => {
-    // Fonction pour récupérer les données du soul
-    const fetchSoulData = async () => {
-      try {
-        const data = await getSoul();
-        console.log(data.address);
-        if (data) {
-          data.dateNaissance = moment(
-            new Date(parseInt(data.dateNaissance.toString()) * 1000)
-          ).format("YYYY-MM-DD");
-          setSoulData(data);
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération du soul:", error);
-        throwNotif("error", "Erreur lors de la récupération du soul.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   // Fonction pour récupérer les données du soul
+  //   const fetchSoulData = async () => {
+  //     try {
+  //       const data = await getSoul();
+  //       console.log(data.address);
+  //       if (data) {
+  //         data.dateNaissance = moment(
+  //           new Date(parseInt(data.dateNaissance.toString()) * 1000)
+  //         ).format("YYYY-MM-DD");
+  //         setSoulData(data);
+  //       }
+  //     } catch (error) {
+  //       console.error("Erreur lors de la récupération du soul:", error);
+  //       throwNotif("error", "Erreur lors de la récupération du soul.");
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    // Vérifier si l'utilisateur est connecté et si les données du soul n'ont pas encore été chargées
-    if (isConnected && isLoading && soulData === null) {
-      fetchSoulData();
-    }
-  }, [isConnected, isLoading, getSoul, soulData]);
+  //   // Vérifier si l'utilisateur est connecté et si les données du soul n'ont pas encore été chargées
+  //   if (isConnected && isLoading && soulData === null) {
+  //     fetchSoulData();
+  //   }
+  // }, [isConnected, isLoading, getSoul, soulData]);
   //_____________________________________________________________________//
 
   //___________________________UPDATE_______________________________//
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
   const loadSoulData = async () => {
     try {
       const data = await getSoul();
@@ -97,9 +99,9 @@ export default function sportif() {
         setSoulData(data);
       }
     } catch (error) {
-      console.error("Erreur lors du chargement du soul:", error);
-      throwNotif("error", "Erreur lors du chargement du soul.");
+      setError("You don't have Soul data");
     } finally {
+      setIsDataLoaded(true);
       setIsLoading(false);
     }
   };
@@ -108,10 +110,10 @@ export default function sportif() {
     // ...
 
     // Chargement des informations actuelles du soul
-    if (isConnected && isLoading && soulData === null) {
+    if (isConnected && isLoading && !isDataLoaded) {
       loadSoulData();
     }
-  }, [isConnected, isLoading, getSoul, soulData]);
+  }, [isConnected, isLoading, isDataLoaded]);
 
   // ...
 

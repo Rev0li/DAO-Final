@@ -58,50 +58,17 @@ Nous examinerons vos modifications et les fusionnerons si elles sont jugées app
 
 MIT Licence.
 
-graph TD
-A[After Login]
-B{User Type}
-C[Single User Screen]
-D[Mes licences]
-E[Mes compétences - Dead End]
-F[Mes participations]
-G[List of Licences]
-H[Demander une licence]
-I[Pop up: Fill personal data]
-J[List of Events for User]
-K[Voter]
-L[Pop up: Vote Options]
-M[Club Screen]
-N[Gestion des licences]
-O[List of Licences: Afficher, Renouveler, Approuver]
-P[Pop up: Licence Data]
-Q[Gestion des événements]
-R[List of Events for Club]
-S[Soumettre un événement]
-T[Fill in Event Details]
-U[Soumettre]
-A --> B
-B -- Single User --> C
-C --> D
-C --> E
-C --> F
-D --> G
-G --> H
-H --> I
-F --> J
-J --> K
-K --> L
-B -- Club --> M
-M --> N
-N --> O
-O --> P
-M --> Q
-Q --> R
-R --> S
-S --> T
-T --> U
-U --> R
-U --> J
+Coverage
+-------------|----------|----------|----------|----------|----------------|
+File         |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+-------------|----------|----------|----------|----------|----------------|
+ contracts/  |    95.24 |    91.18 |    87.33 |    97.43 |                |
+  SBT.sol    |      100 |       90 |    85.71 |      100 |                |
+  Voting.sol |    93.33 |    91.67 |      100 |    95.24 |             85 |
+-------------|----------|----------|----------|----------|----------------|
+All files    |    94.24 |    91.18 |    87.33 |    97.43 |                |
+-------------|----------|----------|----------|----------|----------------|
+
 
 ## FRONTEND
 
