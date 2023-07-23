@@ -14,17 +14,22 @@ describe("Voting Contract", function () {
     await votingContract.deployed();
   });
 
+  // ADD VOTER Functionality
+
   describe("ADD VOTER Functionality", function () {
     it("should return false at bool whitelist", async function () {
+      // Vérifier qu'une adresse n'est pas présente dans la liste blanche par défaut.
       expect(await votingContract.whitelist(addr1.address)).to.be.false;
     });
 
     it("should add a addr to the whitelist", async function () {
+      // Vérifier qu'une adresse peut être ajoutée à la liste blanche.
       await votingContract.addVoter(addr1.address);
       expect(await votingContract.whitelist(addr1.address)).to.be.true;
     });
 
     it("should return Voter is already add", async function () {
+      // Vérifier qu'ajouter une adresse déjà présente dans la liste blanche renvoie une erreur.
       await votingContract.addVoter(addr2.address);
       await expect(votingContract.addVoter(addr2.address)).to.be.revertedWith(
         "Voter is already add"
@@ -32,19 +37,23 @@ describe("Voting Contract", function () {
     });
 
     it("should emit event Whilisted", async function () {
+      // Vérifier que l'événement Whitelisted est émis lorsqu'une adresse est ajoutée à la liste blanche.
       await expect(votingContract.addVoter(addr1.address))
         .to.emit(votingContract, "Whitelisted")
         .withArgs(addr1.address);
     });
   });
-  // EMIT PROPOSAL
+
+  // EMIT PROPOSAL Functionality
+
   describe("EMIT PROPOSAL Functionality", function () {
     it("should array proposal to be equal 0", async function () {
-      // Vérifier qu'il n'y a pas de propositions initiales
+      // Vérifier que le tableau des propositions est vide par défaut.
       await expect(votingContract.proposals.length).to.equal(0);
     });
 
     it("should add a proposal", async function () {
+      // Vérifier qu'une proposition peut être ajoutée au tableau des propositions.
       await votingContract.addVoter(addr1.address);
 
       await votingContract.connect(addr1).addProposal("Première proposition");
@@ -55,6 +64,7 @@ describe("Voting Contract", function () {
     });
 
     it("should return Description empty is not accepted", async function () {
+      // Vérifier qu'ajouter une proposition avec une description vide renvoie une erreur.
       await votingContract.addVoter(addr1.address);
 
       await expect(
@@ -63,6 +73,7 @@ describe("Voting Contract", function () {
     });
 
     it("should emit event emitProposal", async function () {
+      // Vérifier que l'événement emitProposal est émis lorsqu'une proposition est ajoutée.
       await votingContract.addVoter(addr1.address);
 
       await expect(
@@ -73,9 +84,11 @@ describe("Voting Contract", function () {
     });
   });
 
-  // SET VOTE
+  // SET VOTE Functionality
+
   describe("SET VOTE Functionality", function () {
     it("should record yesVote for a proposal", async function () {
+      // Vérifier qu'un vote positif est enregistré pour une proposition donnée.
       await votingContract.addVoter(addr1.address);
       // Ajouter une proposition
       await votingContract.connect(addr1).addProposal("Première proposition");
@@ -92,6 +105,7 @@ describe("Voting Contract", function () {
     });
 
     it("should record noVotes for a proposal", async function () {
+      // Vérifier qu'un vote négatif est enregistré pour une proposition donnée.
       await votingContract.addVoter(addr1.address);
       // Ajouter une proposition
       await votingContract.connect(addr1).addProposal("Première proposition");
@@ -108,6 +122,7 @@ describe("Voting Contract", function () {
     });
 
     it("should record neutralVotes for a proposal", async function () {
+      // Vérifier qu'un vote neutre est enregistré pour une proposition donnée.
       await votingContract.addVoter(addr1.address);
       // Ajouter une proposition
       await votingContract.connect(addr1).addProposal("Première proposition");
@@ -136,25 +151,32 @@ describe("Voting Contract", function () {
     });
 
     it("should return Proposal not found", async function () {
+      // Vérifier qu'essayer de voter pour une proposition qui n'existe pas renvoie une erreur.
       await votingContract.addVoter(addr1.address);
       await votingContract.addVoter(addr2.address);
+
       // Ajouter une proposition
       await votingContract.connect(addr1).addProposal("Première proposition");
       await votingContract.connect(addr2).addProposal("mière proposition");
 
+      // Essayer de voter pour la troisième proposition, qui n'existe pas
       await expect(
         votingContract.connect(addr1).setVote(2, 1)
       ).to.be.revertedWith("Proposal not found");
     });
   });
 
+  // Modifier, onlyWhitelist, and Owner
+
   describe("Modifier, onlyWhitelist and Owner", function () {
+    // Vérifier qu'essayer d'ajouter une adresse à la liste blanche en tant qu'utilisateur non propriétaire renvoie une erreur.
     it("should revert  for add addr to the whitelist onlyOwner", async function () {
       await expect(
         votingContract.connect(addr1).addVoter(addr1.address)
       ).to.be.revertedWith("Ownable: caller is not the owner");
     });
 
+    // Vérifier qu'essayer de voter en tant qu'utilisateur non votant renvoie une erreur.
     it("should revert for Voting onlyWhitelist", async function () {
       await expect(
         votingContract.connect(addr1).setVote(0, 1)
@@ -162,20 +184,10 @@ describe("Voting Contract", function () {
     });
 
     it("should revert for Proposal onlyWhitelist", async function () {
+      // Vérifier qu'essayer d'ajouter une proposition en tant qu'utilisateur non votant renvoie une erreur.
       await expect(
         votingContract.connect(addr1).addProposal("Première proposition")
       ).to.be.revertedWith("Vous n'etes pas autorise a effectuer cette action");
     });
   });
 });
-// Fonctionnalités de la liste blanche (whitelist)
-
-// Vérifier que le propriétaire peut ajouter des votants à la liste blanche.
-// Vérifier que seuls les votants de la liste blanche peuvent ajouter des propositions et voter.
-// Essayer d'ajouter un votant en tant qu'utilisateur non propriétaire et vérifier que cela revert.
-// Essayer d'ajouter une proposition en tant qu'utilisateur non votant et vérifier que cela revert.
-// Autres fonctionnalités
-
-// Vérifier que la longueur de la liste des propositions est correctement mise à jour après l'ajout de propositions.
-// Vérifier que la récupération d'une proposition par son ID fonctionne correctement.
-// Vérifier que la récupération d'un vote par son adresse et l'ID de la proposition fonctionne correctement.
